@@ -1,25 +1,37 @@
-import logo from './logo.svg';
+import {v4 as uuidv4} from 'uuid';
 import './App.css';
+import {useState} from "react";
+import InputItems from "./InputItems";
+import ListItems from "./ListItems";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [todos, setTodos] = useState([
+        {id: uuidv4(), name: 'React'}, {id: uuidv4(), name: 'Redux'}
+    ])
+
+    const updateTask = (id, name) => {
+        setTodos(todos.map(el => el.id === id ? {...el, name: name} : el))
+    }
+
+    const deleteTask = (id) => {
+        setTodos(todos.filter(el => el.id !== id))
+    }
+
+    return (
+        <div className="App">
+            <h2>Tasks List</h2>
+            <InputItems todos={todos} setTodos={setTodos}/>
+            <ol>
+                {todos.map(el => (<ListItems
+                    task={el}
+                    key={el.id}
+                    updateTask={updateTask}
+                    deleteTask={deleteTask}
+                />))}
+            </ol>
+
+        </div>
+    );
 }
 
 export default App;
