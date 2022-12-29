@@ -1,17 +1,19 @@
 import {v4 as uuidv4} from 'uuid';
 import './App.css';
-import InputItems from "./InputItems";
-import ListItems from "./ListItems";
 import {useState} from "react";
-import TrashItems from "./TrashItems";
+import TasksItems from "./TasksItems";
+import TrashTasks from "./TrashTasks";
+import CreateTaskModal from "./CreateTaskModal";
 
 
 function App() {
 
-    const [tasks, setTasks] = useState([
+    const list = [
         {id: uuidv4(), name: 'Learn React', done: false, trash: false},
-        {id: uuidv4(), name: 'Learn FireBase', done: false, trash: false}
-    ])
+        {id: uuidv4(), name: 'Learn Express', done: false, trash: false},
+    ]
+
+    const [tasks, setTasks] = useState(list)
 
     const moveToTrashOrBack = (id) => {
         setTasks(tasks.map(el => el.id === id ? {...el, trash: !el.trash} : el))
@@ -20,24 +22,23 @@ function App() {
 
     return (
         <div className="App">
+            <h1>TodoList</h1>
+            <CreateTaskModal tasks={tasks} setTasks={setTasks}/>
             <h2>Tasks List</h2>
-            <InputItems tasks={tasks} setTasks={setTasks}/>
             <ol>
                 {tasks.filter(el => !el.trash).map(el =>
                     (
-                        <ListItems
+                        <TasksItems
                             key={el.id}
-                            todo={el}
+                            task={el}
                             tasks={tasks}
                             setTasks={setTasks}
                             moveToTrashOrBack={moveToTrashOrBack}
                         />
                     ))}
             </ol>
-            <hr/>
-            <TrashItems tasks={tasks}
+            <TrashTasks tasks={tasks} setTasks={setTasks}
                         moveToTrashOrBack={moveToTrashOrBack}
-                        setTasks={setTasks}
             />
         </div>
     );
